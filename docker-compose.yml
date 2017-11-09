@@ -1,0 +1,67 @@
+version: '2'
+
+volumes:
+  postgres_data:
+    driver: local
+  postgres_backup:
+    driver: local
+
+
+services:
+  nginx:
+    image: olymk2/nginx
+    ports:
+      - 80:80
+      - 443:443
+    depends_on:
+      - gitea
+      - drone-server
+      - pastebin
+    volumes:
+      - /var/www/:/var/www/
+      - /etc/nginx/sites-enabled/:/etc/nginx/sites-enabled
+      - /etc/letsencrypt/:/etc/letsencrypt/
+
+  postgres:
+    image: postgres:9.6
+    mem_limit: 256m
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - postgres_backup:/backups
+    env_file: .env
+   
+  gitea:
+    image: gitea/gitea:1.2
+    depends_on:
+      - postgres
+    ports:
+      - "10022:22"
+    volumes:
+      - ./data/gitea:/data
+    restart: always
+
+  drone-server:
+    image: drone/drone:0.8.1
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./data/drone:/var/lib/drone/
+    links:
+      - gitea
+    env_file: .env
+
+  drone-agent:
+    image: drone/agent:0.8.1
+    command: agent
+    depends_on:
+      - drone-server
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - ./data/drone:/var/lib/drone/
+    env_file: .env
+
+  pastebin:
+    image: olymk2/dpaste
+    ports:
+      - "10082:8000"
+
