@@ -1,17 +1,22 @@
-Project hosting setup 
+#+TITLE: Project hosting setup 
+
+** Description
 
 includes gitea for code hosting drone for  continuous integration testing and a paste bin for code sharing.
 
 ** Getting started
 Copy env.smaple to .env and edit the values for your setup mainly domains and passwords.
 
+Copy the nginx config to /etc/nginx/sites-enabled/ and edit the files inserting your domains.
+
+
 ** migrating from sqlite
 Best bet is to modify gitea to use postgres and let it create the initial data and just import your data.
 
-Modify the link network and volumes to mount your sqlite and loader file.
+Modify the link network and volumes to mount your sqlite and loader file, make sure you edit the loader file pgloader_sqlite_to_postgres_commands with your postgres details.
 #+BEGIN_SRC sh
 docker run --rm \
-  -v /project-hosting-setup/pgimport:/pgimport \
+  -v /project-hosting-setup/pgloader_sqlite_to_postgres_commands:/pgimport \
   -v /project-hosting-setup/data/gitea/gitea/data/gitea.db:/db.sqlite3 \
   --link phs_postgres_1:postgres \
   --network phs_default \
@@ -27,9 +32,11 @@ If the migration fails with an error about missing columns, remove them from sql
 i had to remove the below columns.
 
 #+BEGIN_SRC sql
+"protected_branch"."enable_whitelist"
 "protected_branch"."whitelist_user_i_ds"
 "protected_branch"."whitelist_team_i_ds"
 "action"."act_user_name"
 "action"."repo_name"
 "action"."repo_user_name"
+"issue"."ref"
 #+END_SRC
