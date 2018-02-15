@@ -9,7 +9,7 @@ $GITSECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 $CISECRET=$(cat /dev/urandom | tr -dc 'a-zA-Z0-9' | fold -w 32 | head -n 1)
 
 mkdir -p /etc/nginx/sites-enabled/
-mkdir -p /var/www
+mkdir -p /var/www/.well-known
 
 cd /var/www/
 git clone https://github.com/olymk2/project-hosting-setup.git
@@ -29,5 +29,7 @@ sed -i "s/mydomain.com/${MYDOMAIN}/g" config/pastebin.mydomain.com
 cp config/git.mydomain.com "/etc/nginx/sites-enabled/git.${MYDOMAIN}"
 cp config/ci.mydomain.com "/etc/nginx/sites-enabled/ci.${MYDOMAIN}"
 cp config/pastebin.mydomain.com "/etc/nginx/sites-enabled/pastebin.${MYDOMAIN}"
+cp config/redirect_https "/etc/nginx/sites-enabled/redirect_https"
+
 
 docker-compose up -d

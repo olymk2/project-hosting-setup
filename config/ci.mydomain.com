@@ -1,20 +1,5 @@
 upstream app-drone {
-    server drone-server:9000;
-}
-
-
-server {
-    listen 80;
-    server_name ci.mydomain.com;
-    root /var/www/sites/ci/;
-
-    location /.well-known/acme-challenge/ {
-        alias /var/www/sites/ci/.well-known/acme-challenge/;
-    }
-
-    location / {
-        return 301 https://$host$request_uri;
-    }
+    server drone-server:8000;
 }
 
 server {
@@ -49,6 +34,7 @@ server {
         proxy_set_header Host             $host;
         proxy_set_header X-Real-IP        $remote_addr;
         proxy_set_header X-Forwarded-For  $proxy_add_x_forwarded_for;
+        proxy_set_header X-Forwarded-Proto $scheme;
         #max_body_size will allow you to upload a large git repository
         client_max_body_size 100M;
 

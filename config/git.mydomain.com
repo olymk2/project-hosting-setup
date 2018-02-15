@@ -3,21 +3,6 @@ upstream app-gitea {
 }
 
 server {
-    listen 80;
-    server_name git.mydomain.com;
-    root /var/www/sites/git/;
-
-    location /.well-known/acme-challenge/ {
-        alias /var/www/sites/git/.well-known/acme-challenge/;
-    }
-
-    location / {
-        return 301 https://$host$request_uri;
-    }
-
-}
-
-server {
     listen 443 ssl http2;
     server_name git.mydomain.com;
     root /var/www/site/;
