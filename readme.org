@@ -5,6 +5,10 @@
 includes gitea for code hosting drone for  continuous integration testing and a paste bin for code sharing.
 
 ** Getting started
+You can use the setup.sh file just change the variables at the top to your setup, if you setup a server you will likely want at least 1 gb if not 2 for larger ci jobs, 
+you can use this referal link for cheap servers on digitalocean and get some credit to try out the setup https://m.do.co/c/f05b87f9fec9 .
+
+
 Copy env.smaple to .env and edit the values for your setup mainly domains and passwords.
 
 Copy the nginx config to /etc/nginx/sites-enabled/ and edit the files inserting your domains.
