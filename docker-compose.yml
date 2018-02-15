@@ -19,6 +19,7 @@ services:
       - pastebin
     volumes:
       - /var/www/:/var/www/
+      - /etc/ssl/certs/:/etc/ssl/certs/
       - /etc/nginx/sites-enabled/:/etc/nginx/sites-enabled
       - /etc/letsencrypt/:/etc/letsencrypt/
 
